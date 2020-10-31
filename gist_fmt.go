@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 )
 
-const gistURL = "https://github.com/wuxl-lang/Gist/blob/master"
+const rootURL = "https://github.com/wuxl-lang/Gist/blob/master"
 
 func visitTopics() []string {
 	files, err := ioutil.ReadDir(".")
@@ -62,7 +62,7 @@ func buildTopicIndex(topic string, gists []string) string {
 
 	for _, gist := range gists {
 		content = append(content, fmt.Sprintf("* [%s]", gist))
-		footer = append(footer, fmt.Sprintf("[%s]:%s/%s/%s", gist, gistURL, topic, gist))
+		footer = append(footer, fmt.Sprintf("[%s]:%s/%s/%s", gist, rootURL, topic, gist))
 	}
 
 	lines = append(lines, strings.Join(content, "\n"))
@@ -81,10 +81,10 @@ func writeTopicIndex(topic string, index string) {
 }
 
 func main() {
-	subDirs := visitTopics()
-	for _, subDir := range subDirs {
-		topicGists := visitGists(subDir) 
-		index := buildTopicIndex(subDir, topicGists)
-		writeTopicIndex(subDir, index)
+	topics := visitTopics()
+	for _, topic := range topics {
+		gists := visitGists(topic)
+		index := buildTopicIndex(topic, gists)
+		writeTopicIndex(topic, index)
 	}
 }
